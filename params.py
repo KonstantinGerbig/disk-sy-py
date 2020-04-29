@@ -55,6 +55,8 @@ class params_phys():
     """
     l_drift = True
 
+    trapping_efficiency = 0.999
+
     """
     Dynamical pebble stokes number
     """
@@ -66,7 +68,9 @@ class params_phys():
     l_formation = True
     l_formation_second_generation = True
 
-    trapping_efficiency = 0.1
+    conversion_efficiency = 0.1
+    # formation efficiency = trapping efficiency * conversion efficiency
+
     trapping_distance = 5 # in units of H
 
     """

@@ -147,7 +147,7 @@ class formation():
 
 
         if PHYS.l_formation == True:
-            self.conversion_length =  (PHYS.trapping_distance * CONST.H) / PHYS.trapping_efficiency
+            self.conversion_length =  (PHYS.trapping_distance * CONST.H) / (PHYS.trapping_efficiency*PHYS.conversion_efficiency)
             self.pls_form_flux_first = sig_pbb * self.v_pbb / self.conversion_length
             
             if PHYS.l_formation_second_generation == True:
@@ -222,6 +222,10 @@ class collisions():
 class drift():
 
     def __init__(self, R, VAR,  CONST, PHYS, DUST_GROWTH):
+
+        # calculate drift efficiency
+        drift_efficiency = 1 - PHYS.trapping_efficiency
+
         """
             Load current surface densities
         """
@@ -235,7 +239,7 @@ class drift():
             # PEBBLES
             v_pbb = f_v_pbb(DUST_GROWTH.st_pbb, DUST_GROWTH.pressure_grad, DUST_GROWTH.dtogr, CONST.H, R, CONST.c_s)
             timescale_drift_pbb = R / v_pbb
-            self.drift_flux_pbb = sig_pbb/timescale_drift_pbb
+            self.drift_flux_pbb = drift_efficiency * sig_pbb/timescale_drift_pbb
 
             # DEBRIS
 
@@ -243,19 +247,19 @@ class drift():
             St_mm = f_Ep_Stokes(VAR.sig_g, a_mm, PHYS.dst_dens)
             v_dbr_mm = f_v_pbb(St_mm, DUST_GROWTH.pressure_grad, DUST_GROWTH.dtogr, CONST.H, R, CONST.c_s)
             timescale_drift_dbr_mm = R / v_dbr_mm
-            self.drift_flux_dbr_mm = sig_dbr_mm / timescale_drift_dbr_mm
+            self.drift_flux_dbr_mm = drift_efficiency * sig_dbr_mm / timescale_drift_dbr_mm
 
             a_dm = 0.5*(PHYS.a_2 + PHYS.a_3)
             St_dm = f_Ep_Stokes(VAR.sig_g, a_dm, PHYS.dst_dens)
             v_dbr_dm = f_v_pbb(St_dm, DUST_GROWTH.pressure_grad, DUST_GROWTH.dtogr, CONST.H, R, CONST.c_s)
             timescale_drift_dbr_dm = R / v_dbr_dm
-            self.drift_flux_dbr_dm = sig_dbr_dm / timescale_drift_dbr_dm
+            self.drift_flux_dbr_dm = drift_efficiency * sig_dbr_dm / timescale_drift_dbr_dm
 
             a_m = 0.5*(PHYS.a_3 + PHYS.a_4)
             St_m = f_Ep_Stokes(VAR.sig_g, a_m, PHYS.dst_dens)
             v_dbr_m = f_v_pbb(St_m, DUST_GROWTH.pressure_grad, DUST_GROWTH.dtogr, CONST.H, R, CONST.c_s)
             timescale_drift_dbr_m = R / v_dbr_m
-            self.drift_flux_dbr_m = sig_dbr_m / timescale_drift_dbr_m
+            self.drift_flux_dbr_m = drift_efficiency* sig_dbr_m / timescale_drift_dbr_m
 
             
         else:
