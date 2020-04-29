@@ -51,6 +51,11 @@ class params_phys():
     l_dustgrowth = True
 
     """
+    Dust drift
+    """
+    l_drift = True
+
+    """
     Dynamical pebble stokes number
     """
     frag_velocity = 5*100 # cm/s
@@ -146,7 +151,7 @@ class params_population():
 
     #Rs = np.array([0.1*AU, 1*AU, 3*AU, 5*AU, 7*AU, 10*AU, 20*AU, 30*AU, 40*AU, 60*AU, 100*AU])
     #Rs = np.linspace(1,100, 50)*AU
-    Rs = np.logspace(np.log10(1*AU), np.log10(100*AU), 50)
+    Rs = np.logspace(np.log10(1*AU), np.log10(100*AU), 10)
 
 
     l_plotmass = True

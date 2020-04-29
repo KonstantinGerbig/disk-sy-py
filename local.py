@@ -50,6 +50,8 @@ class var():
     sig_dbr_mm = None
     sig_dbr_dm = None
     sig_dbr_m = None
+
+    sig_drift_loss = None
     
     #st_dst = None
     #st_frag = None
@@ -148,7 +150,8 @@ class local():
                         sig_dbr_um = np.array([self.Sigma_debris_init]),
                         sig_dbr_mm = np.array([self.Sigma_debris_init]),
                         sig_dbr_dm = np.array([self.Sigma_debris_init]),
-                        sig_dbr_m = np.array([self.Sigma_debris_init])
+                        sig_dbr_m = np.array([self.Sigma_debris_init]),
+                        sig_drift_loss = np.array([float(0)])
                         )
         
         # inititalize data
@@ -168,11 +171,6 @@ class local():
             if nt >= NUM.nt_max:
                 break
 
-            """
-                Load current surface densities
-            """
-            
-            
 
             """
                 Dust growth
@@ -208,24 +206,33 @@ class local():
 
             collision_flux_pls_second  = COLLISIONS.collision_flux_pls_second
 
+            """
+                Drift
+            """
+            DRIFT = drift(R, self.VAR, self.CONST, PHYS, DUST_GROWTH)
+
+            drift_flux_pbb = DRIFT.drift_flux_pbb
+            drift_flux_dbr_mm = DRIFT.drift_flux_dbr_mm
+            drift_flux_dbr_dm = DRIFT.drift_flux_dbr_dm
+            drift_flux_dbr_m = DRIFT.drift_flux_dbr_m
 
             """
                 Get surface density fluxes
             """
 
             sig_dst_flux = - dust_growth_flux
-            sig_pbb_flux = + dust_growth_flux - pls_form_flux_first
+            sig_pbb_flux = + dust_growth_flux - pls_form_flux_first - drift_flux_pbb
             sig_pls_first_flux = pls_form_flux_first + collision_flux_pls_first
     
     
             sig_dbr_um_flux = + collision_flux_um
-            sig_dbr_mm_flux = + collision_flux_mm
-            sig_dbr_dm_flux = + collision_flux_dm - pls_form_flux_dm
-            sig_dbr_m_flux = + collision_flux_m - pls_form_flux_m
+            sig_dbr_mm_flux = + collision_flux_mm - drift_flux_dbr_mm
+            sig_dbr_dm_flux = + collision_flux_dm - pls_form_flux_dm - drift_flux_dbr_dm
+            sig_dbr_m_flux = + collision_flux_m - pls_form_flux_m - drift_flux_dbr_m
     
             sig_pls_second_flux = pls_form_flux_second + collision_flux_pls_second
 
-
+            sig_drift_loss_flux = + drift_flux_pbb + drift_flux_dbr_mm + drift_flux_dbr_dm + drift_flux_dbr_m
 
             """
                 Calculate timestep
@@ -273,6 +280,7 @@ class local():
             sig_dbr_dm = self.VAR.sig_dbr_dm + sig_dbr_dm_flux * dt
             sig_dbr_m = self.VAR.sig_dbr_m + sig_dbr_m_flux * dt
 
+            sig_drift_loss = self.VAR.sig_drift_loss + sig_drift_loss_flux * dt
 
             """
                 Check if a surface density falls below sig_min
@@ -320,7 +328,8 @@ class local():
                                 sig_dbr_um = sig_dbr_um,
                                 sig_dbr_mm = sig_dbr_mm,
                                 sig_dbr_dm = sig_dbr_dm,
-                                sig_dbr_m = sig_dbr_m
+                                sig_dbr_m = sig_dbr_m,
+                                sig_drift_loss = sig_drift_loss
                         )
 
             # Append data
@@ -355,6 +364,7 @@ class local():
         plt.plot(self.DATA.t/year, self.DATA.sig_dbr_m)
 
         plt.plot(self.DATA.t/year, self.DATA.sig_g)
+
 
         plt.ylim(2*NUM.sig_min, np.amax(self.DATA.sig_g))
         plt.xlim(10**3, NUM.t_max/year)

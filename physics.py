@@ -219,6 +219,52 @@ class collisions():
 
             self.collision_flux_pls_second = float(0)
 
+class drift():
+
+    def __init__(self, R, VAR,  CONST, PHYS, DUST_GROWTH):
+        """
+            Load current surface densities
+        """
+        sig_pbb = VAR.sig_pbb
+        sig_dbr_mm = VAR.sig_dbr_mm
+        sig_dbr_dm = VAR.sig_dbr_dm
+        sig_dbr_m = VAR.sig_dbr_m
+
+        if PHYS.l_drift == True:
+
+            # PEBBLES
+            v_pbb = f_v_pbb(DUST_GROWTH.st_pbb, DUST_GROWTH.pressure_grad, DUST_GROWTH.dtogr, CONST.H, R, CONST.c_s)
+            timescale_drift_pbb = R / v_pbb
+            self.drift_flux_pbb = sig_pbb/timescale_drift_pbb
+
+            # DEBRIS
+
+            a_mm = 0.5*(PHYS.a_1 + PHYS.a_2)
+            St_mm = f_Ep_Stokes(VAR.sig_g, a_mm, PHYS.dst_dens)
+            v_dbr_mm = f_v_pbb(St_mm, DUST_GROWTH.pressure_grad, DUST_GROWTH.dtogr, CONST.H, R, CONST.c_s)
+            timescale_drift_dbr_mm = R / v_dbr_mm
+            self.drift_flux_dbr_mm = sig_dbr_mm / timescale_drift_dbr_mm
+
+            a_dm = 0.5*(PHYS.a_2 + PHYS.a_3)
+            St_dm = f_Ep_Stokes(VAR.sig_g, a_dm, PHYS.dst_dens)
+            v_dbr_dm = f_v_pbb(St_dm, DUST_GROWTH.pressure_grad, DUST_GROWTH.dtogr, CONST.H, R, CONST.c_s)
+            timescale_drift_dbr_dm = R / v_dbr_dm
+            self.drift_flux_dbr_dm = sig_dbr_dm / timescale_drift_dbr_dm
+
+            a_m = 0.5*(PHYS.a_3 + PHYS.a_4)
+            St_m = f_Ep_Stokes(VAR.sig_g, a_m, PHYS.dst_dens)
+            v_dbr_m = f_v_pbb(St_m, DUST_GROWTH.pressure_grad, DUST_GROWTH.dtogr, CONST.H, R, CONST.c_s)
+            timescale_drift_dbr_m = R / v_dbr_m
+            self.drift_flux_dbr_m = sig_dbr_m / timescale_drift_dbr_m
+
+            
+        else:
+            self.drift_flux_pbb = float(0)
+            self.drift_flux_dbr_mm = float(0)
+            self.drift_flux_dbr_dm = float(0)
+            self.drift_flux_dbr_m = float(0)
+
+
 class gas_evolution():
 
     def __init__(self, R, t, dt, CONST, PHYS):

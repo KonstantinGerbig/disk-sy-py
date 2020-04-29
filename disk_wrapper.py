@@ -87,7 +87,8 @@ class disk():
             ('M_dbr_um', 'sig_dbr_um'),
             ('M_dbr_mm', 'sig_dbr_mm'),
             ('M_dbr_dm', 'sig_dbr_dm'),
-            ('M_dbr_m', 'sig_dbr_m')]
+            ('M_dbr_m', 'sig_dbr_m'),
+            ('M_drift_loss', 'sig_drift_loss')]
 
         # initialize M dict
         if l_total == True:
