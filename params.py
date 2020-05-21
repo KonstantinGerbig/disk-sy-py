@@ -7,7 +7,7 @@ class params_phys():
     Mass
     """
     M_star = 1* M_sun
-    M_disk_0 = 0.05 * M_star
+    M_disk_0 = 0.02 * M_star
 
     """
     Temperature profile
@@ -130,6 +130,8 @@ class params_num():
 
     plotdir = 'plots'
 
+    diskname = 'disk'
+
 
     # If a surface density falls below this value, it is set to zero
     # prevents time step issues
@@ -158,9 +160,9 @@ class params_population():
     Rs = np.logspace(np.log10(1*AU), np.log10(100*AU), 10)
 
 
-    l_plotmass = True
+    l_plotmass = False
 
-    l_plot_profiles = True
+    l_plot_profiles = False
 
     l_print_progress_disk = True
 

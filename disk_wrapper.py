@@ -294,7 +294,7 @@ class disk():
 
 
 
-def disk_wrapper_function(datadir, PARAMS):
+def disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS):
     """
     This is a wrapper for running the integrator at a range of semi-major axises in order to simulate an entire disk
     Arguments:
@@ -309,34 +309,33 @@ def disk_wrapper_function(datadir, PARAMS):
     results : instance of the results object
     """
 
-    
-    
-    PHYS = params_phys()
-    NUM = params_num()
-
-    Rs = PARAMS.Rs
+    Rs = PARAMS_POP.Rs
 
     """
     Make disk data directory
     """
 
-    diskpath =  datadir + '/disk'
+    diskname = NUM.diskname
+    print('')
+    print('Simulating disk: ' + diskname)
+
+    diskpath =  datadir + '/' + diskname
     if not os.path.exists(diskpath):
-        os.mkdir(datadir + '/disk')
+        os.mkdir(datadir + '/' + diskname)
         if os.path.exists(diskpath):
             print('Created disk data directory')
     else:
         print('Disk data directory already exists. Nothing to create.')
 
     if not os.path.exists(diskpath + '/local'):
-        os.mkdir(datadir + '/disk/local')
+        os.mkdir(datadir + '/' + diskname + '/local')
         if os.path.exists(diskpath + '/local'):
             print('Created local data directory')
     else:
         print('Local data directory already exists. Nothing to create.')
 
 
-    if (NUM.l_plotlocal == True) or (PARAMS.l_plotmass == True) or (PARAMS.l_plot_profiles == True): 
+    if (NUM.l_plotlocal == True) or (PARAMS_POP.l_plotmass == True) or (PARAMS_POP.l_plot_profiles == True): 
         plotpath =  diskpath + '/' + NUM.plotdir
         # check if plot directory exist
         if not os.path.exists(plotpath):
@@ -348,12 +347,12 @@ def disk_wrapper_function(datadir, PARAMS):
         plotpath = None
 
 
-    if PARAMS.l_run == True:
+    if PARAMS_POP.l_run == True:
         print('Running Disk')
 
         i_R = 0
         for R in Rs:
-            if PARAMS.l_print_progress_disk == True:
+            if PARAMS_POP.l_print_progress_disk == True:
                 str(int((i_R+1)/len(Rs)*100))
                 print('R = ' + str(np.round(R/AU, 3)) + ' AU | ' + str(int((i_R+1)/len(Rs)*100)) + ' %')
             LOCAL = local(R, PHYS, NUM)
@@ -382,10 +381,10 @@ def disk_wrapper_function(datadir, PARAMS):
     # write diskvar
     DISK.evaluation(Rs, NUM)
 
-    if PARAMS.l_plotmass == True:
+    if PARAMS_POP.l_plotmass == True:
         DISK.plot_M(PHYS)
 
-    if PARAMS.l_plot_profiles == True:
+    if PARAMS_POP.l_plot_profiles == True:
         DISK.plot_profiles(PHYS, Rs, which_ts = 'all')
 
     #diskinfo
