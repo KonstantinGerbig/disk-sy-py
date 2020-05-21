@@ -11,3 +11,5 @@ mu           = 2.3e0;                   # noqa - mean molecular mass in proton m
 M_sun        = 1.9891e+33;              # noqa - mass of the sun in g
 R_sun        = 69550800000.0;           # noqa - radius of the sun in cm
 sig_h2       = 2e-15;                   # noqa - cross section of H2 [cm^2]
+c            = sc.speed_of_light*1e2    # noqa - speed of light in cm/s
+h            = sc.Planck*1e7            # noqa - Planck constant in erg s

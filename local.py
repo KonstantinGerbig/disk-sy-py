@@ -25,6 +25,7 @@ class data():
                 warnings.warn("Attribute not found")
 
     def write_to_file(self, R, diskpath):
+        # this function is used in disk_wrapper.py
         import inspect
         attributes_all = inspect.getmembers(self, lambda x:not(inspect.isroutine(x)))
         attributes = [x for x in attributes_all if not(x[0].startswith('__') and x[0].endswith('__'))]

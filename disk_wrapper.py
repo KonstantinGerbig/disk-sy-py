@@ -32,7 +32,7 @@ class disk():
             warnings.warn("Couldn't load local data of R = " + str(R/AU) + " ... Check if pkl file exists!")
         return None
 
-    def evaluation(self, Rs, NUM, N_t_grid = 100, l_profiles = True, l_total = True):
+    def evaluation(self, Rs, NUM, PHYS, N_t_grid = 100, l_profiles = True, l_total = True, l_calc_mm_flux = True):
         # check if at least one of the evaluation flags is on
         if (l_profiles != True) and (l_total != True):
             import warnings
@@ -127,10 +127,54 @@ class disk():
                     for data_tuple in R_list_object[:]:
                         if data_tuple[0] == sig_key:
                             sig_dict[sig_key] = np.append(sig_dict[sig_key], data_tuple[1][i_approx])
-
+            
             # save radial profiles (directory was created above)
             if l_profiles == True:
                 pickle.dump(sig_dict, open(self.path + '/profiles/sig_dict_'+ str(i_t_grid) + '.pkl', 'wb'))
+
+            """
+            Calculate radial flux profile
+            """
+
+            if l_calc_mm_flux == True:
+
+                opacity_kappa = 3.07107
+
+                # this needs to be more sophisticated
+                sig_mm_profile = sig_dict['sig_pbb'] + sig_dict['sig_dbr_mm']
+
+                # optical_depth = opacity*sigma*cos(disk inclination)
+                
+                
+
+                nu_mm = 0.1/c
+                
+                Flux_profile = np.array([])
+                optical_depth_profile = np.array([])
+                j = 0
+                for R in Rs:
+                    Omega = f_Omega(R, PHYS.M_star)
+
+                    T = f_temperature(R, PHYS.T_star, PHYS.q, PHYS.irr_angle)
+
+                    disk_inclination = np.arctan(f_sound_speed(T)/(Omega*R))
+
+                    optical_depth = opacity_kappa * sig_mm_profile[j] * np.cos(disk_inclination)
+                    optical_depth_profile = np.append(optical_depth_profile, optical_depth)
+
+                    #Flux = f_Planck_function(T, nu_mm) * (1- np.exp(-optical_depth))* Omega
+
+                    #Flux_profile = np.append(Flux_profile, Flux)
+
+                    j += 1
+
+                #if i_t_grid == len(t_grid)-1:
+                    #print(sig_mm_profile)
+                    #print(optical_depth_profile)
+                    #print(Flux_profile)
+
+                # save optical depth profiles
+                pickle.dump(optical_depth_profile, open(self.path + '/profiles/tau_mm_'+ str(i_t_grid) + '.pkl', 'wb'))
 
             # Calc total quantities
             if l_total == True:
@@ -159,7 +203,6 @@ class disk():
             pickle.dump(M_dict, open(self.path + '/total/M_dict.pkl', 'wb'))
 
         return None
-
 
 
 
@@ -379,7 +422,7 @@ def disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS):
     #DISK.print_attributes()
 
     # write diskvar
-    DISK.evaluation(Rs, NUM)
+    DISK.evaluation(Rs, NUM, PHYS)
 
     if PARAMS_POP.l_plotmass == True:
         DISK.plot_M(PHYS)

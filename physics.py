@@ -98,6 +98,11 @@ def f_fragment_fraction(m_dst, m_pls, a_small, a_big, xi, pls_dens):
     return frac
 
 
+def f_Planck_function(T, nu):
+    prefactor = 2 * h* nu**3 / c**2
+    B_nu = prefactor / (np.exp(h*nu/(k_b * T))-1)
+    return B_nu
+
 
 class dust_growth():
 

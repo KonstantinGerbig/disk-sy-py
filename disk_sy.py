@@ -23,6 +23,7 @@ def population_wrapper():
     PHYS = params_phys()
     disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
 
+    """
     NUM = params_num(diskname = 'disk2')
     PHYS = params_phys(alpha = 1e-4)
     disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
@@ -46,7 +47,7 @@ def population_wrapper():
     NUM = params_num(diskname = 'disk7')
     PHYS = params_phys(frag_velocity = 1*100)
     disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
+    """
 
     return None
 
