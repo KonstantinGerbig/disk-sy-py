@@ -166,6 +166,9 @@ class params_population():
 
     l_print_progress_disk = True
 
+    # deletes all files except M_dict and t_dict
+    l_light_save = True
+
     def __init__(self, **kwargs):
         """
         Overwrite default params with kwargs

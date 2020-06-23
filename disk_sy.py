@@ -50,24 +50,32 @@ class disk_population():
         self.PARAMS_POP = params_population()
         datadir = self.make_datadir(self.PARAMS_POP)
 
-        trapping_efficiency_array = np.array([1-3e-3, 1-3e-2])
-        frag_velocity_array = np.array([3*100])
-        alpha_array = np.array([2e-3])
-        conversion_efficiency_array = np.array([0.1])
+        trapping_efficiency_array = np.array([1-3e-4, 1-3e-3, 1-3e-2])
+        frag_velocity_array = np.array([1*100, 3*100, 10*100])
+        alpha_array = np.array([2e-4, 8e-4, 2e-3, 4e-3])
+        conversion_efficiency_array = np.array([0.01, 0.1, 0.5])
+        M_disk_0_array = np.array([0.02*M_sun, 0.03*M_sun])
+
+        # add something that calculates how many disks are calculated
 
         i = 0
         for a in trapping_efficiency_array:
             for b in frag_velocity_array:
                 for c in alpha_array:
                     for d in conversion_efficiency_array:
-                        diskname = 'sample0_disk_' + str(i)
-                        NUM = params_num(diskname = diskname)
+                        for e in M_disk_0_array:
+                            diskname = 'sample0_disk_' + str(i)
+                            NUM = params_num(diskname = diskname)
                         
-                        PHYS = params_phys(trapping_efficiency = a, frag_velocity = b, alpha = c, conversion_efficiency = d)
-                        disk_wrapper_function(datadir, self.PARAMS_POP, NUM, PHYS)
+                            PHYS = params_phys(trapping_efficiency = a,
+                                frag_velocity = b,
+                                alpha = c,
+                                conversion_efficiency = d,
+                                M_disk_0 = e)
+                            disk_wrapper_function(datadir, self.PARAMS_POP, NUM, PHYS)
 
-                        self.print_params(datadir + '/' + diskname, NUM, PHYS)
-                        i += 1
+                            self.print_params(datadir + '/' + diskname, NUM, PHYS)
+                            i += 1
         
         return None
 

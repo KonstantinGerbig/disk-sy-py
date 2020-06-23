@@ -430,6 +430,12 @@ def disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS):
     if PARAMS_POP.l_plot_profiles == True:
         DISK.plot_profiles(PHYS, Rs, which_ts = 'all')
 
-    #diskinfo
-
+    if PARAMS_POP.l_light_save == True:
+        import shutil
+        try:
+            shutil.rmtree(diskpath + '/local')
+            shutil.rmtree(diskpath + '/profiles')
+        except:
+            import warnings
+            warnings.warn('Could not delete unnessary files')
     return None
