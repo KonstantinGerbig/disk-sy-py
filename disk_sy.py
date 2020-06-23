@@ -3,6 +3,7 @@ from params import params_population
 import os
 from disk_wrapper import *
 from constants import *
+import pickle
 
 class disk_population():
 
@@ -20,8 +21,26 @@ class disk_population():
             print('Main data directory already exists. Nothing to create.')
         return datadir
 
-    def print_params(self, datadir, NUM, PHYS):
+    def print_params(self, path, NUM, PHYS):
+
+        # write all attributes of NUM and PHYS in dictonaries
+        import inspect
+
+        phys_dict = {}
+        for i in inspect.getmembers(PHYS):
+            if not i[0].startswith('_'):
+                phys_dict.update({i[0] : i[1]})
+
+        num_dict = {}
+        for i in inspect.getmembers(NUM):
+            if not i[0].startswith('_'):
+                num_dict.update({i[0] : i[1]})
+
         
+        # Pickle dump the dictionaries
+
+        pickle.dump(num_dict, open(path + '/num.pkl', 'wb'))
+        pickle.dump(phys_dict, open(path + '/phys.pkl', 'wb'))
         return 0
     
     def sample0(self):
@@ -43,10 +62,11 @@ class disk_population():
                     for d in conversion_efficiency_array:
                         diskname = 'sample0_disk_' + str(i)
                         NUM = params_num(diskname = diskname)
+                        
                         PHYS = params_phys(trapping_efficiency = a, frag_velocity = b, alpha = c, conversion_efficiency = d)
-
-                        self.print_params(self, datadir, NUM, PHYS)
                         disk_wrapper_function(datadir, self.PARAMS_POP, NUM, PHYS)
+
+                        self.print_params(datadir + '/' + diskname, NUM, PHYS)
                         i += 1
         
         return None

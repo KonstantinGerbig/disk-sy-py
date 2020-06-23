@@ -364,14 +364,14 @@ def disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS):
 
     diskpath =  datadir + '/' + diskname
     if not os.path.exists(diskpath):
-        os.mkdir(datadir + '/' + diskname)
+        os.mkdir(diskpath)
         if os.path.exists(diskpath):
             print('Created disk data directory')
     else:
         print('Disk data directory already exists. Nothing to create.')
 
     if not os.path.exists(diskpath + '/local'):
-        os.mkdir(datadir + '/' + diskname + '/local')
+        os.mkdir(diskpath + '/local')
         if os.path.exists(diskpath + '/local'):
             print('Created local data directory')
     else:

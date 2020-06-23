@@ -113,7 +113,7 @@ class params_num():
 
     t_max = 10**8 * year # run_time
 
-    C_max = 0.01 # "Courant" number
+    C_max = 0.03 # "Courant" number
 
     dt_min = 10 * year # minimum time step
     #nt_max = 10**5 # max number of time steps
@@ -157,7 +157,7 @@ class params_population():
 
     #Rs = np.array([0.1*AU, 1*AU, 3*AU, 5*AU, 7*AU, 10*AU, 20*AU, 30*AU, 40*AU, 60*AU, 100*AU])
     #Rs = np.linspace(1,100, 50)*AU
-    Rs = np.logspace(np.log10(1*AU), np.log10(100*AU), 20)
+    Rs = np.logspace(np.log10(1*AU), np.log10(100*AU), 10)
 
 
     l_plotmass = False
