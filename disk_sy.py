@@ -42,6 +42,20 @@ class disk_population():
         pickle.dump(num_dict, open(path + '/num.pkl', 'wb'))
         pickle.dump(phys_dict, open(path + '/phys.pkl', 'wb'))
         return 0
+
+    def high_res_default_disk(self):
+
+        Rs = np.logspace(np.log10(1*AU), np.log10(100*AU), 30)
+        self.PARAMS_POP = params_population(Rs = Rs, l_light_save = False, l_plotmass = True, l_plot_profiles = True)
+        datadir = self.make_datadir(self.PARAMS_POP)
+
+        diskname = 'default_high_res'
+        NUM = params_num(diskname = diskname)
+        PHYS = params_phys()
+        disk_wrapper_function(datadir, self.PARAMS_POP, NUM, PHYS)
+
+        return None
+
     
     def sample0(self):
         # generates a grid based sample population.
@@ -50,11 +64,13 @@ class disk_population():
         self.PARAMS_POP = params_population()
         datadir = self.make_datadir(self.PARAMS_POP)
 
-        trapping_efficiency_array = np.array([1-3e-4, 1-3e-3, 1-3e-2])
+        trapping_efficiency_array = np.array([1-3e-3, 1-3e-2, 0.85])
         frag_velocity_array = np.array([1*100, 3*100, 10*100])
-        alpha_array = np.array([2e-4, 8e-4, 2e-3, 4e-3])
-        conversion_efficiency_array = np.array([0.01, 0.1, 0.5])
-        M_disk_0_array = np.array([0.02*M_sun, 0.03*M_sun])
+        alpha_array = np.array([1e-4, 1e-3, 1e-2])
+        conversion_efficiency_array = np.array([0.1, 0.5, 0.8])
+        M_disk_0_array = np.array([0.01, 0.02, 0.03])
+        R_1_array = np.array([30*AU, 50*AU])
+        M_star_array = np.array([1*M_sun, 3*M_sun])
 
         # add something that calculates how many disks are calculated
 
@@ -64,18 +80,22 @@ class disk_population():
                 for c in alpha_array:
                     for d in conversion_efficiency_array:
                         for e in M_disk_0_array:
-                            diskname = 'sample0_disk_' + str(i)
-                            NUM = params_num(diskname = diskname)
-                        
-                            PHYS = params_phys(trapping_efficiency = a,
-                                frag_velocity = b,
-                                alpha = c,
-                                conversion_efficiency = d,
-                                M_disk_0 = e)
-                            disk_wrapper_function(datadir, self.PARAMS_POP, NUM, PHYS)
+                            for f in R_1_array:
+                                for g in M_star_array:
+                                    diskname = 'sample0_disk_' + str(i)
+                                    NUM = params_num(diskname = diskname)
+                                
+                                    PHYS = params_phys(trapping_efficiency = a,
+                                        frag_velocity = b,
+                                        alpha = c,
+                                        conversion_efficiency = d,
+                                        M_disk_0 = e,
+                                        R_1 = f,
+                                        M_star = g)
+                                    disk_wrapper_function(datadir, self.PARAMS_POP, NUM, PHYS)
 
-                            self.print_params(datadir + '/' + diskname, NUM, PHYS)
-                            i += 1
+                                    self.print_params(datadir + '/' + diskname, NUM, PHYS)
+                                    i += 1
         
         return None
 
@@ -86,91 +106,13 @@ def population_wrapper():
     
     POPULATION = disk_population()
 
-    POPULATION.sample0()
+    #POPULATION.sample0()
+
+    POPULATION.high_res_default_disk()
+
+
 
     """
-    
-    NUM = params_num(diskname = 'disk1')
-    PHYS = params_phys()
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'disk2')
-    PHYS = params_phys(alpha = 1e-4)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'disk3')
-    PHYS = params_phys(R_1 = 60*AU, M_disk_0 = 0.1*M_sun)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'disk4')
-    PHYS = params_phys(conversion_efficiency = 0.01)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'disk5')
-    PHYS = params_phys(trapping_efficiency = 0.99)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'disk6')
-    PHYS = params_phys(frag_velocity = 10*100)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'disk7')
-    PHYS = params_phys(frag_velocity = 1*100)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-    
-
-    NUM = params_num(diskname = 'visc1')
-    PHYS = params_phys(alpha = 1e-2)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'visc2')
-    PHYS = params_phys(alpha = 5e-3)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'visc3')
-    PHYS = params_phys(alpha = 5e-4)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'visc4')
-    PHYS = params_phys(alpha = 1e-4)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    
-
-    NUM = params_num(diskname = 'visc5')
-    PHYS = params_phys(alpha = 2e-3)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'visc6')
-    PHYS = params_phys(alpha = 3e-3)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'visc7')
-    PHYS = params_phys(alpha = 4e-3)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'drift1')
-    PHYS = params_phys(trapping_efficiency = 1-0)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'drift2')
-    PHYS = params_phys(trapping_efficiency = 1-1e-4)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'drift3')
-    PHYS = params_phys(trapping_efficiency = 1-1e-3)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'drift4')
-    PHYS = params_phys(trapping_efficiency = 1-5e-3)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    NUM = params_num(diskname = 'drift5')
-    PHYS = params_phys(trapping_efficiency = 1-1e-2)
-    disk_wrapper_function(datadir, PARAMS_POP, NUM, PHYS)
-
-    
-
     NUM = params_num(diskname = 'finetune')
     PHYS = params_phys(
         trapping_efficiency = 1-3e-3,

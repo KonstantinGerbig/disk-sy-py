@@ -7,7 +7,7 @@ class params_phys():
     Mass
     """
     M_star = 1* M_sun
-    M_disk_0 = 0.02 * M_star
+    M_disk_0 = 0.02 #* M_star
 
     """
     Temperature profile

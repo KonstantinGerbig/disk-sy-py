@@ -97,7 +97,7 @@ class var_nonevolving():
 
         self.t_s = (1./ (3 * (2 - PHYS.gamma)**2)) * PHYS.R_1**2 / self.nu_1
 
-        self.scaling_C = (3./2) * self.nu_1 * PHYS.M_disk_0 * (2-PHYS.gamma) / PHYS.R_1**2
+        self.scaling_C = (3./2) * self.nu_1 * PHYS.M_disk_0*PHYS.M_star * (2-PHYS.gamma) / PHYS.R_1**2
 
         self.Omega = f_Omega(R, PHYS.M_star)
         self.temp = f_temperature(R, PHYS.T_star, PHYS.q, PHYS.irr_angle)

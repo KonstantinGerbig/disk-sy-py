@@ -279,3 +279,21 @@ class gas_evolution():
     def __init__(self, R, t, dt, CONST, PHYS):
 
         self.sig_g = f_similarity_solution(R/PHYS.R_1, t+dt, CONST.scaling_C, CONST.nu_1, PHYS.gamma, CONST.t_s, PHYS.l_gasevolution)
+
+"""
+    def photoevaporation(self, R, PHYS):
+        # numerical fit from Owen et al 2012
+        a1 = 0.15138
+        b1 = -1.2182
+        c1 = 3.4046
+        d1 = -3.5717
+        e1 = -0.32762
+        f1 = 3.6064
+        g1 = -2.4918
+
+        x = 0.85* (R/AU) / (PHYS.M_star/M_sun)
+
+        mass_loss_profile = 10**(a1*np.log10(x)**6 + b1*np.log10(x)**5 +c1*np.log10(x)**4)
+            * 10**(d1*np.log10(x)**3 + e1*np.log10(x)**2 +f1*np.log10(x) + g1)
+            
+"""
